@@ -31,9 +31,9 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
+          <!-- <router-link to="/profile/index">
             <el-dropdown-item>Profile</el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <!-- <router-link to="/">
             <el-dropdown-item>Dashboard</el-dropdown-item>
           </router-link>
@@ -43,12 +43,38 @@
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
           </a> -->
+          <el-dropdown-item @click.native="changePassword">
+            <span style="display: block">Change Password</span>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <el-dialog title="Change Password" :visible.sync="dialogFormVisible">
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="left"
+        label-width="70px"
+        style="width: 400px; margin-left: 50px"
+      >
+        <el-form-item label="名称" prop="username">
+          <el-input v-model="temp.username" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="temp.password" show-password />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false"> Cancel </el-button>
+        <el-button type="primary" @click="handleChangePassword()">
+          Confirm
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,6 +86,7 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 // import Search from '@/components/HeaderSearch'
+import { changePassword } from '@/api/user'
 
 export default {
   components: {
@@ -70,12 +97,47 @@ export default {
     SizeSelect
     // Search
   },
+  data() {
+    return {
+      dialogFormVisible: false,
+      rules: {
+        username: [
+          { required: true, message: 'username is required', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'password is required', trigger: 'blur' }
+        ]
+      },
+      temp: {
+        username: this.$store.getters.name,
+        password: undefined
+      }
+    }
+  },
   computed: {
     ...mapGetters(['sidebar', 'avatar', 'device'])
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    changePassword() {
+      this.dialogFormVisible = true
+    },
+    handleChangePassword() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          changePassword(this.temp).then(() => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: 'Change Password Successfully',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
     },
     async logout() {
       await this.$store.dispatch('user/logout')
