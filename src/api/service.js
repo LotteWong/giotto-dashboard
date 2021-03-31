@@ -7,3 +7,10 @@ export function listServices(query) {
     params: query
   })
 }
+
+export function deleteService(id) {
+  return request({
+    url: '/services/' + id,
+    method: 'delete'
+  })
+}
