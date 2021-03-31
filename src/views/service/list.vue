@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { listServices } from '@/api/service'
+import { listServices, deleteService } from '@/api/service'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -172,13 +172,31 @@ export default {
       this.getList()
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      this.$confirm('The record will be deleted. Are you sure?', 'Attention', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
       })
-      this.list.splice(index, 1)
+        .then(() => {
+          deleteService(row.id).then((response) => {
+            this.getList()
+
+            this.$notify({
+              title: 'Success',
+              message: 'Delete Successfully',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        })
+        .catch(() => {
+          this.$notify({
+            title: 'Success',
+            message: 'Delete is canceled',
+            type: 'info',
+            duration: 2000
+          })
+        })
     }
   }
 }
