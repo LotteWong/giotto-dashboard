@@ -17,15 +17,36 @@
       >
         Search
       </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >
-        Add
-      </el-button>
+      <router-link :to="'/service/http'">
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          icon="el-icon-edit"
+        >
+          Create Http Service
+        </el-button>
+      </router-link>
+      <router-link :to="'/service/tcp'">
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          icon="el-icon-edit"
+        >
+          Create Tcp Service
+        </el-button>
+      </router-link>
+      <router-link :to="'/service/grpc'">
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          icon="el-icon-edit"
+        >
+          Create Grpc Service
+        </el-button>
+      </router-link>
     </div>
 
     <el-table
@@ -115,9 +136,9 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const serviceTypeOptions = [
-  { key: 0, display_name: 'Http' },
-  { key: 1, display_name: 'Tcp' },
-  { key: 2, display_name: 'Grpc' }
+  { key: '0', display_name: 'Http' },
+  { key: '1', display_name: 'Tcp' },
+  { key: '2', display_name: 'Grpc' }
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }
