@@ -80,13 +80,34 @@ export const constantRoutes = [
   {
     path: '/service',
     component: Layout,
-    redirect: '/service/list',
+    redirect: '/service/index',
     children: [
       {
-        path: 'list',
-        component: () => import('@/views/service/list'),
+        path: '',
+        component: () => import('@/views/service/index'),
         name: 'Services',
         meta: { title: 'Services', icon: 'component', affix: true }
+      },
+      {
+        path: 'http',
+        component: () => import('@/views/service/http'),
+        name: 'Create Http Service',
+        meta: { title: 'Create Http Service', icon: 'component', affix: false },
+        hidden: true
+      },
+      {
+        path: 'tcp',
+        component: () => import('@/views/service/tcp'),
+        name: 'Create Tcp Service',
+        meta: { title: 'Create Tcp Service', icon: 'component', affix: false },
+        hidden: true
+      },
+      {
+        path: 'grpc',
+        component: () => import('@/views/service/grpc'),
+        name: 'Create Grpc Service',
+        meta: { title: 'Create Grpc Service', icon: 'component', affix: false },
+        hidden: true
       }
     ]
   },
