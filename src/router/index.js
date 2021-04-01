@@ -129,6 +129,13 @@ export const constantRoutes = [
         name: 'Update Grpc Service',
         meta: { title: 'Update Grpc Service', icon: 'component', affix: false },
         hidden: true
+      },
+      {
+        path: '/flow/service/:id(\\d+)',
+        component: () => import('@/views/service/flow'),
+        name: 'Service Flow',
+        meta: { title: 'Service Flow', icon: 'component', affix: false },
+        hidden: true
       }
     ]
   },
