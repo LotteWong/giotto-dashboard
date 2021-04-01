@@ -3,12 +3,13 @@
     <el-row>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>Create Http Service</span>
+          <span v-if="!isEdit">Create Http Service</span>
+          <span v-if="isEdit">Update Http Service</span>
         </div>
         <div style="margin-bottom: 50px">
           <el-form ref="form" :model="form" label-width="200px">
             <el-form-item label="Service Name" :required="true">
-              <el-input v-model="form.service_name" />
+              <el-input v-model="form.service_name" :disabled="isEdit" />
             </el-form-item>
             <el-form-item label="Service Desc">
               <el-input v-model="form.service_desc" />
@@ -18,12 +19,14 @@
                 v-model="form.rule"
                 placeholder="Please input rule"
                 class="input-with-select"
+                :disabled="isEdit"
               >
                 <el-select
                   slot="prepend"
                   v-model="form.rule_type"
                   placeholder="Please select rule type"
                   style="width: 100px"
+                  :disabled="isEdit"
                 >
                   <el-option label="Prefix" :value="0" />
                   <el-option label="Domain" :value="1" />
@@ -34,7 +37,7 @@
               <el-switch
                 v-model="form.need_https"
                 :active-value="1"
-                inactive-value="0"
+                :inactive-value="0"
               />
               <span style="color: #606266; font-weight: 700; margin-left: 50px">
                 Enable Strip Uri
@@ -93,9 +96,7 @@
               />
             </el-form-item>
             <el-form-item label="Service Host Flow Limit">
-              <el-input
-                v-model.number="form.service_host_flow_limit"
-              />
+              <el-input v-model.number="form.service_host_flow_limit" />
             </el-form-item>
             <el-form-item label="Client Ip Flow Limit">
               <el-input v-model.number="form.client_ip_flow_limit" />
@@ -125,14 +126,10 @@
               />
             </el-form-item>
             <el-form-item label="Upstream Connect Timeout">
-              <el-input
-                v-model.number="form.upstream_connect_timeout"
-              />
+              <el-input v-model.number="form.upstream_connect_timeout" />
             </el-form-item>
             <el-form-item label="Upstream Header Timeout">
-              <el-input
-                v-model.number="form.upstream_header_timeout"
-              />
+              <el-input v-model.number="form.upstream_header_timeout" />
             </el-form-item>
             <el-form-item label="Upstream Idle Timeout">
               <el-input v-model.number="form.upstream_idle_timeout" />
@@ -161,16 +158,22 @@
 </template>
 
 <script>
-import { createHttpService } from '@/api/service'
+import {
+  createHttpService,
+  showService,
+  updateHttpService
+} from '@/api/service'
 export default {
-  name: 'CreateHttpService',
+  name: 'HttpService',
   data() {
     return {
+      isEdit: false,
       isSubmit: false,
       isCancel: false,
+      service_id: 0,
       form: {
         black_list: '',
-        client_ip_flow_limit: undefined,
+        client_ip_flow_limit: '',
         header_transform: '',
         ip_list: '',
         need_https: 0,
@@ -193,7 +196,64 @@ export default {
       }
     }
   },
+  created() {
+    const id = this.$route.params && this.$route.params.id
+    if (id > 0) {
+      this.isEdit = true
+      this.service_id = id
+      this.fetchFormData(id)
+    }
+  },
   methods: {
+    fetchFormData(id) {
+      showService(id).then((response) => {
+        this.form.black_list = response.data.access_control.black_list.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.client_ip_flow_limit =
+          response.data.access_control.client_ip_flow_limit
+        this.form.header_transform = response.data.http_rule.header_transform.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.ip_list = response.data.load_balance.ip_list.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.need_https = response.data.http_rule.need_https
+        this.form.need_strip_uri = response.data.http_rule.need_strip_uri
+        this.form.need_websocket = response.data.http_rule.need_websocket
+        this.form.open_auth = response.data.access_control.open_auth
+        this.form.round_type = response.data.load_balance.round_type
+        this.form.rule = response.data.http_rule.rule
+        this.form.rule_type = response.data.http_rule.rule_type
+        this.form.service_desc = response.data.info.service_desc
+        this.form.service_host_flow_limit =
+          response.data.access_control.service_host_flow_limit
+        this.form.service_name = response.data.info.service_name
+        this.form.upstream_connect_timeout =
+          response.data.load_balance.upstream_connect_timeout
+        this.form.upstream_header_timeout =
+          response.data.load_balance.upstream_header_timeout
+        this.form.upstream_idle_timeout =
+          response.data.load_balance.upstream_idle_timeout
+        this.form.upstream_max_idle =
+          response.data.load_balance.upstream_max_idle
+        this.form.url_rewrite = response.data.http_rule.url_rewrite.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.weight_list = response.data.load_balance.weight_list.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.white_list = response.data.access_control.white_list.replace(
+          /,/g,
+          '\n'
+        )
+      })
+    },
     handleSubmit() {
       this.isSubmit = true
       const body = Object.assign({}, this.form)
@@ -221,20 +281,37 @@ export default {
         body.upstream_max_idle === '' ? 0 : body.upstream_max_idle
 
       console.log(body)
-      createHttpService(body)
-        .then((response) => {
-          this.isSubmit = false
-          this.resetFormData()
-          this.$notify({
-            title: 'Success',
-            message: 'Create Successfully',
-            type: 'success',
-            duration: 2000
+      if (this.isEdit) {
+        updateHttpService(this.service_id, body)
+          .then((response) => {
+            this.isSubmit = false
+            this.fetchFormData(this.service_id)
+            this.$notify({
+              title: 'Success',
+              message: 'Update Successfully',
+              type: 'success',
+              duration: 2000
+            })
           })
-        })
-        .catch(() => {
-          this.isSubmit = false
-        })
+          .catch(() => {
+            this.isSubmit = false
+          })
+      } else {
+        createHttpService(body)
+          .then((response) => {
+            this.isSubmit = false
+            this.resetFormData()
+            this.$notify({
+              title: 'Success',
+              message: 'Create Successfully',
+              type: 'success',
+              duration: 2000
+            })
+          })
+          .catch(() => {
+            this.isSubmit = false
+          })
+      }
     },
     handleCancel() {
       this.isCancel = true

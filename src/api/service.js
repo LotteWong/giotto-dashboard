@@ -32,6 +32,37 @@ export function createGrpcService(data) {
   })
 }
 
+export function showService(id) {
+  return request({
+    url: '/services/' + id,
+    method: 'get'
+  })
+}
+
+export function updateHttpService(id, data) {
+  return request({
+    url: '/services/http/' + id,
+    method: 'put',
+    data
+  })
+}
+
+export function updateTcpService(id, data) {
+  return request({
+    url: '/services/tcp/' + id,
+    method: 'put',
+    data
+  })
+}
+
+export function updateGrpcService(id, data) {
+  return request({
+    url: '/services/grpc/' + id,
+    method: 'put',
+    data
+  })
+}
+
 export function deleteService(id) {
   return request({
     url: '/services/' + id,
