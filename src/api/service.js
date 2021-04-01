@@ -69,3 +69,10 @@ export function deleteService(id) {
     method: 'delete'
   })
 }
+
+export function getServiceFlow(id) {
+  return request({
+    url: '/dashboard/flow/services/' + id,
+    method: 'get'
+  })
+}

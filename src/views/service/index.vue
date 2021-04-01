@@ -105,7 +105,9 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
-          <el-button type="success" size="mini"> Monitor </el-button>
+          <router-link :to="'/flow/service/' + row.id">
+            <el-button type="success" size="mini"> Monitor </el-button>
+          </router-link>
           <router-link
             v-if="row.service_type === 0"
             :to="'/service/http/' + row.id"
