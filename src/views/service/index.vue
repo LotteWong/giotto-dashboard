@@ -106,9 +106,24 @@
       >
         <template slot-scope="{ row, $index }">
           <el-button type="success" size="mini"> Monitor </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
-          </el-button>
+          <router-link
+            v-if="row.service_type === 0"
+            :to="'/service/http/' + row.id"
+          >
+            <el-button type="primary" size="mini"> Edit </el-button>
+          </router-link>
+          <router-link
+            v-if="row.service_type === 1"
+            :to="'/service/tcp/' + row.id"
+          >
+            <el-button type="primary" size="mini"> Edit </el-button>
+          </router-link>
+          <router-link
+            v-if="row.service_type === 2"
+            :to="'/service/grpc/' + row.id"
+          >
+            <el-button type="primary" size="mini"> Edit </el-button>
+          </router-link>
           <el-button
             size="mini"
             type="danger"

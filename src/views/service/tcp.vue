@@ -3,18 +3,19 @@
     <el-row>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>Create Http Service</span>
+          <span v-if="!isEdit">Create Tcp Service</span>
+          <span v-if="isEdit">Update Tcp Service</span>
         </div>
         <div style="margin-bottom: 50px">
           <el-form ref="form" :model="form" label-width="200px">
             <el-form-item label="Service Name" :required="true">
-              <el-input v-model="form.service_name" />
+              <el-input v-model="form.service_name" :disabled="isEdit" />
             </el-form-item>
             <el-form-item label="Service Desc">
               <el-input v-model="form.service_desc" />
             </el-form-item>
             <el-form-item label="Port" :required="true">
-              <el-input v-model.number="form.port" />
+              <el-input v-model.number="form.port" :disabled="isEdit" />
             </el-form-item>
             <el-form-item label="Enable Auth">
               <el-switch
@@ -48,9 +49,7 @@
               />
             </el-form-item>
             <el-form-item label="Service Host Flow Limit">
-              <el-input
-                v-model.number="form.service_host_flow_limit"
-              />
+              <el-input v-model.number="form.service_host_flow_limit" />
             </el-form-item>
             <el-form-item label="Client Ip Flow Limit">
               <el-input v-model.number="form.client_ip_flow_limit" />
@@ -100,13 +99,15 @@
 </template>
 
 <script>
-import { createTcpService } from '@/api/service'
+import { createTcpService, showService, updateTcpService } from '@/api/service'
 export default {
-  name: 'CreateTcpService',
+  name: 'TcpService',
   data() {
     return {
+      isEdit: false,
       isSubmit: false,
       isCancel: false,
+      service_id: 0,
       form: {
         black_list: '',
         client_ip_flow_limit: '',
@@ -124,7 +125,48 @@ export default {
       }
     }
   },
+  created() {
+    const id = this.$route.params && this.$route.params.id
+    if (id > 0) {
+      this.isEdit = true
+      this.service_id = id
+      this.fetchFormData(id)
+    }
+  },
   methods: {
+    fetchFormData(id) {
+      showService(id).then((response) => {
+        this.form.black_list = response.data.access_control.black_list.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.client_ip_flow_limit =
+          response.data.access_control.client_ip_flow_limit
+        this.form.ip_list = response.data.load_balance.ip_list.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.open_auth = response.data.access_control.open_auth
+        this.form.port = response.data.tcp_rule.port
+        this.form.round_type = response.data.load_balance.round_type
+        this.form.service_desc = response.data.info.service_desc
+        this.form.service_host_flow_limit =
+          response.data.access_control.service_host_flow_limit
+        this.form.service_name = response.data.info.service_name
+        this.form.weight_list = response.data.load_balance.weight_list.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.white_host_name = response.data.access_control.white_host_name.replace(
+          /,/g,
+          '\n'
+        )
+        this.form.white_list = response.data.access_control.white_list.replace(
+          /,/g,
+          '\n'
+        )
+      })
+    },
     handleSubmit() {
       this.isSubmit = true
       const body = Object.assign({}, this.form)
@@ -142,19 +184,37 @@ export default {
         body.client_ip_flow_limit === '' ? 0 : body.client_ip_flow_limit
 
       console.log(body)
-      createTcpService(body)
-        .then((response) => {
-          this.isSubmit = false
-          this.$notify({
-            title: 'Success',
-            message: 'Create Successfully',
-            type: 'success',
-            duration: 2000
+      if (this.isEdit) {
+        updateTcpService(this.service_id, body)
+          .then((response) => {
+            this.isSubmit = false
+            this.fetchFormData(this.service_id)
+            this.$notify({
+              title: 'Success',
+              message: 'Update Successfully',
+              type: 'success',
+              duration: 2000
+            })
           })
-        })
-        .catch(() => {
-          this.isSubmit = false
-        })
+          .catch(() => {
+            this.isSubmit = false
+          })
+      } else {
+        createTcpService(body)
+          .then((response) => {
+            this.isSubmit = false
+            this.resetFormData()
+            this.$notify({
+              title: 'Success',
+              message: 'Create Successfully',
+              type: 'success',
+              duration: 2000
+            })
+          })
+          .catch(() => {
+            this.isSubmit = false
+          })
+      }
     },
     handleCancel() {
       this.isCancel = true
