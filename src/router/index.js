@@ -81,9 +81,10 @@ export const constantRoutes = [
     path: '/service',
     component: Layout,
     redirect: '/service/index',
+    name: 'Services',
     children: [
       {
-        path: '',
+        path: 'index',
         component: () => import('@/views/service/index'),
         name: 'Services',
         meta: { title: 'Services', icon: 'component', affix: true }
@@ -135,6 +136,41 @@ export const constantRoutes = [
         component: () => import('@/views/service/flow'),
         name: 'Service Flow',
         meta: { title: 'Service Flow', icon: 'component', affix: false },
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/app',
+    component: Layout,
+    name: 'Apps',
+    redirect: '/app/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/app/index'),
+        name: 'Apps',
+        meta: { title: 'App', icon: 'user', affix: true }
+      },
+      {
+        path: '',
+        component: () => import('@/views/app/app'),
+        name: 'Create App',
+        meta: { title: 'Create App', icon: 'user', affix: false },
+        hidden: true
+      },
+      {
+        path: ':id(\\d+)',
+        component: () => import('@/views/app/app'),
+        name: 'Update App',
+        meta: { title: 'Update App', icon: 'user', affix: false },
+        hidden: true
+      },
+      {
+        path: '/flow/app/:id(\\d+)',
+        component: () => import('@/views/app/flow'),
+        name: 'App Flow',
+        meta: { title: 'App Flow', icon: 'user', affix: false },
         hidden: true
       }
     ]
