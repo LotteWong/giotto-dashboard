@@ -81,7 +81,7 @@ export const constantRoutes = [
     path: '/service',
     component: Layout,
     redirect: '/service/index',
-    name: 'Services',
+    name: 'Service Manager',
     children: [
       {
         path: 'index',
@@ -143,34 +143,34 @@ export const constantRoutes = [
   {
     path: '/app',
     component: Layout,
-    name: 'Apps',
+    name: 'App Manager',
     redirect: '/app/index',
     children: [
       {
         path: 'index',
         component: () => import('@/views/app/index'),
         name: 'Apps',
-        meta: { title: 'App', icon: 'user', affix: true }
+        meta: { title: 'Apps', icon: 'peoples', affix: true }
       },
       {
         path: '',
         component: () => import('@/views/app/app'),
         name: 'Create App',
-        meta: { title: 'Create App', icon: 'user', affix: false },
+        meta: { title: 'Create App', icon: 'peoples', affix: false },
         hidden: true
       },
       {
         path: ':id(\\d+)',
         component: () => import('@/views/app/app'),
         name: 'Update App',
-        meta: { title: 'Update App', icon: 'user', affix: false },
+        meta: { title: 'Update App', icon: 'peoples', affix: false },
         hidden: true
       },
       {
         path: '/flow/app/:id(\\d+)',
         component: () => import('@/views/app/flow'),
         name: 'App Flow',
-        meta: { title: 'App Flow', icon: 'user', affix: false },
+        meta: { title: 'App Flow', icon: 'peoples', affix: false },
         hidden: true
       }
     ]

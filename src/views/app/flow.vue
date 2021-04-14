@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Chart from '../components/LineFlow'
+import Chart from '../components/flowchart/LineFlow'
 import { showApp, getAppFlow } from '@/api/app'
 
 export default {
