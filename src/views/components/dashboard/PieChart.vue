@@ -43,7 +43,6 @@ export default {
     }
   },
   chartData: {
-    deep: true,
     handler: function(newData, oldData) {
       this.initChart()
     }

@@ -104,7 +104,7 @@ export default {
     },
     fetchServicePercentageData() {
       getServicePercentage().then((response) => {
-        this.pieChartData.legend = response.data.legend
+        this.pieChartData.legend = response.data.legends
         let i
         for (i = 0; i < response.data.records.length; i++) {
           this.pieChartData.series[i] = {
