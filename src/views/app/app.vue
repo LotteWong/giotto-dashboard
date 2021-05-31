@@ -7,40 +7,50 @@
           <span v-if="isEdit">Update App</span>
         </div>
         <div style="margin-bottom: 50px">
-          <el-form ref="form" :model="form" label-width="200px">
-            <el-form-item label="App Id" :required="true">
-              <el-input v-model="form.app_id" :disabled="isEdit" />
-            </el-form-item>
-            <el-form-item label="App Name" :required="true">
-              <el-input v-model="form.app_name" :disabled="isEdit" />
-            </el-form-item>
-            <el-form-item label="Secret">
-              <el-input v-model.number="form.secret" />
-            </el-form-item>
-            <el-form-item label="White Ips">
-              <el-input
-                v-model="form.white_ips"
-                type="textarea"
-                placeholder="Please input white ips"
-                autosize=""
-              />
-            </el-form-item>
-            <!-- <el-form-item label="Black Ips">
-              <el-input
-                v-model="form.black_ips"
-                type="textarea"
-                placeholder="Please input black ips"
-                autosize=""
-              />
-            </el-form-item> -->
-            <el-form-item label="App Qpd Limit">
-              <el-input v-model.number="form.qpd" />
-            </el-form-item>
-            <el-form-item label="App Qps Limit">
-              <el-input v-model.number="form.qps" />
-            </el-form-item>
+          <el-form ref="form" :model="form">
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="应用简要信息/App Info" name="1">
+                <el-form-item label="App Id" :required="true" label-width="200px">
+                  <el-input v-model="form.app_id" :disabled="isEdit" placeholder="Please input app id" />
+                </el-form-item>
+                <el-form-item label="App Name" :required="true" label-width="200px">
+                  <el-input v-model="form.app_name" :disabled="isEdit" placeholder="Please input app name" />
+                </el-form-item>
+                <el-form-item label="Secret" label-width="200px">
+                  <el-input v-model.number="form.secret" placeholder="Please input secret" />
+                </el-form-item>
+              </el-collapse-item>
 
-            <el-form-item>
+              <el-collapse-item title="权限认证配置/Ip Auth" name="2">
+                <el-form-item label="White Ips" label-width="200px">
+                  <el-input
+                    v-model="form.white_ips"
+                    type="textarea"
+                    placeholder="Please input white ips"
+                    autosize=""
+                  />
+                </el-form-item>
+                <el-form-item label="Black Ips" label-width="200px">
+                  <el-input
+                    v-model="form.black_ips"
+                    type="textarea"
+                    placeholder="Please input black ips"
+                    autosize=""
+                  />
+                </el-form-item>
+              </el-collapse-item>
+
+              <el-collapse-item title="流量控制配置/Rate Limit" name="3">
+                <el-form-item label="App Qpd Limit" label-width="200px">
+                  <el-input v-model.number="form.qpd" placeholder="Please input app qpd limit" />
+                </el-form-item>
+                <el-form-item label="App Qps Limit" label-width="200px">
+                  <el-input v-model.number="form.qps" placeholder="Please input app qps limit" />
+                </el-form-item>
+              </el-collapse-item>
+            </el-collapse>
+
+            <el-form-item style="margin-top: 30px;text-align:center">
               <el-button
                 type="primary"
                 :disabled="isSubmit"
@@ -68,6 +78,7 @@ export default {
       isEdit: false,
       isSubmit: false,
       isCancel: false,
+      activeNames: ['1', '2', '3'],
       app_id: 0,
       form: {
         app_id: '',
@@ -75,8 +86,8 @@ export default {
         qpd: '',
         qps: '',
         secret: '',
-        white_ips: ''
-        // black_ips: ''
+        white_ips: '',
+        black_ips: ''
       }
     }
   },
@@ -100,10 +111,10 @@ export default {
           /,/g,
           '\n'
         )
-        // this.form.black_ips = response.data.black_ips.replace(
-        //   /,/g,
-        //   '\n'
-        // )
+        this.form.black_ips = response.data.black_ips.replace(
+          /,/g,
+          '\n'
+        )
       })
     },
     handleSubmit() {
@@ -111,7 +122,7 @@ export default {
       const body = Object.assign({}, this.form)
 
       body.white_ips = body.white_ips.replace(/\n/g, ',')
-      // body.black_ips = body.black_ips.replace(/\n/g, ',')
+      body.black_ips = body.black_ips.replace(/\n/g, ',')
 
       body.qpd = body.qpd === '' ? 0 : body.qpd
       body.qps = body.qps === '' ? 0 : body.qps
@@ -161,8 +172,8 @@ export default {
         qpd: '',
         qps: '',
         secret: '',
-        white_ips: ''
-        // black_ips: ''
+        white_ips: '',
+        black_ips: ''
       }
     }
   }

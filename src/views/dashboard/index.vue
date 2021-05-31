@@ -7,21 +7,21 @@
     </el-row>
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
+      <!-- <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
         </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+      </el-col> -->
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
           <pie-chart :chart-data="pieChartData" />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+      <!-- <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <bar-chart />
         </div>
-      </el-col>
+      </el-col> -->
     </el-row>
 
     <!-- <el-row :gutter="8">
@@ -41,22 +41,22 @@
 <script>
 import PanelGroup from '../components/dashboard/PanelGroup'
 import LineChart from '../components/dashboard/LineChart'
-import RaddarChart from '../components/dashboard/RaddarChart'
+// import RaddarChart from '../components/dashboard/RaddarChart'
 import PieChart from '../components/dashboard/PieChart'
-import BarChart from '../components/dashboard/BarChart'
+// import BarChart from '../components/dashboard/BarChart'
 // import TransactionTable from './components/dashboard/TransactionTable'
 // import TodoList from './components/dashboard/TodoList'
 // import BoxCard from './components/dashboard/BoxCard'
-import { getStatistics, getTotalFlow, getServicePercentage } from '@/api/dashboard'
+import { getStatistics, getTotalFlow, getHttpServicePercentage } from '@/api/dashboard'
 
 export default {
   name: 'Dashboard',
   components: {
     PanelGroup,
     LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart
+    // RaddarChart,
+    PieChart
+    // BarChart
     // TransactionTable,
     // TodoList,
     // BoxCard
@@ -76,11 +76,12 @@ export default {
       },
       pieChartData: {
         title: 'Service Percentage',
-        legend: ['Http', 'Tcp', 'Grpc'],
+        legend: ['Wss', 'Ws', 'Https', 'Http'],
         series: [
-          { value: 0, name: 'Http' },
-          { value: 0, name: 'Tcp' },
-          { value: 0, name: 'Grpc' }
+          { value: 0, name: 'Wss' },
+          { value: 0, name: 'Ws' },
+          { value: 0, name: 'Https' },
+          { value: 0, name: 'Http' }
         ]
       }
     }
@@ -88,7 +89,7 @@ export default {
   created() {
     this.fetchPanelGroupData()
     this.fetchLineChartData()
-    this.fetchServicePercentageData()
+    this.fetchHttpServicePercentageData()
   },
   methods: {
     fetchPanelGroupData() {
@@ -102,8 +103,8 @@ export default {
         this.lineChartData.yesterdayFlow = response.data.yesterday_flow
       })
     },
-    fetchServicePercentageData() {
-      getServicePercentage().then((response) => {
+    fetchHttpServicePercentageData() {
+      getHttpServicePercentage().then((response) => {
         this.pieChartData.legend = response.data.legends
         let i
         for (i = 0; i < response.data.records.length; i++) {

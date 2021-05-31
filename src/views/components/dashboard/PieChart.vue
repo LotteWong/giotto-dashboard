@@ -42,9 +42,12 @@ export default {
       chart: null
     }
   },
-  chartData: {
-    handler: function(newData, oldData) {
-      this.initChart()
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.initChart()
+      }
     }
   },
   mounted() {

@@ -27,7 +27,7 @@
           Create Http Service
         </el-button>
       </router-link>
-      <router-link :to="'/service/tcp'">
+      <!-- <router-link :to="'/service/tcp'">
         <el-button
           class="filter-item"
           style="margin-left: 10px"
@@ -36,8 +36,8 @@
         >
           Create Tcp Service
         </el-button>
-      </router-link>
-      <router-link :to="'/service/grpc'">
+      </router-link> -->
+      <!-- <router-link :to="'/service/grpc'">
         <el-button
           class="filter-item"
           style="margin-left: 10px"
@@ -46,7 +46,7 @@
         >
           Create Grpc Service
         </el-button>
-      </router-link>
+      </router-link> -->
     </div>
 
     <el-table
@@ -73,12 +73,12 @@
           <span>{{ row.service_desc }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Type" min-width="50px">
+      <!-- <el-table-column label="Service Type" min-width="70px">
         <template slot-scope="{ row }">
           <span>{{ row.service_type | serviceTypeFilter }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Service Addr" min-width="160px">
+      </el-table-column> -->
+      <el-table-column label="Address" min-width="150px">
         <template slot-scope="{ row }">
           <span>{{ row.service_addr }}</span>
         </template>
@@ -93,11 +93,11 @@
           <span>{{ row.real_qpd }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Total Node" min-width="40px">
+      <!-- <el-table-column label="Total Node" min-width="30px">
         <template slot-scope="{ row }">
           <span>{{ row.total_node }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="Actions"
         align="center"

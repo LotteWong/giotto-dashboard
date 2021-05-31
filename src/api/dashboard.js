@@ -14,6 +14,13 @@ export function getServicePercentage() {
   })
 }
 
+export function getHttpServicePercentage() {
+  return request({
+    url: '/dashboard/percentage/services/http',
+    method: 'get'
+  })
+}
+
 export function getStatistics() {
   return request({
     url: '/dashboard/statistics',

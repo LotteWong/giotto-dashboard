@@ -7,138 +7,167 @@
           <span v-if="isEdit">Update Http Service</span>
         </div>
         <div style="margin-bottom: 50px">
-          <el-form ref="form" :model="form" label-width="200px">
-            <el-form-item label="Service Name" :required="true">
-              <el-input v-model="form.service_name" :disabled="isEdit" />
-            </el-form-item>
-            <el-form-item label="Service Desc">
-              <el-input v-model="form.service_desc" />
-            </el-form-item>
-            <el-form-item label="Rule" :required="true">
-              <el-input
-                v-model="form.rule"
-                placeholder="Please input rule"
-                class="input-with-select"
-                :disabled="isEdit"
-              >
-                <el-select
-                  slot="prepend"
-                  v-model="form.rule_type"
-                  placeholder="Please select rule type"
-                  style="width: 100px"
-                  :disabled="isEdit"
-                >
-                  <el-option label="Prefix" :value="0" />
-                  <el-option label="Domain" :value="1" />
-                </el-select>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="Enable Https">
-              <el-switch
-                v-model="form.need_https"
-                :active-value="1"
-                :inactive-value="0"
-              />
-              <span style="color: #606266; font-weight: 700; margin-left: 50px">
-                Enable Strip Uri
-              </span>
-              <el-switch
-                v-model="form.need_strip_uri"
-                :active-value="1"
-                :inactive-value="0"
-              />
-              <span style="color: #606266; font-weight: 700; margin-left: 50px">
-                Enable Websocket
-              </span>
-              <el-switch
-                v-model="form.need_websocket"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-            <el-form-item label="Url Rewrite">
-              <el-input
-                v-model="form.url_rewrite"
-                type="textarea"
-                placeholder="Please input url rewrite"
-                autosize=""
-              />
-            </el-form-item>
-            <el-form-item label="Header Transform">
-              <el-input
-                v-model="form.header_transform"
-                type="textarea"
-                placeholder="Please input header transform"
-                autosize=""
-              />
-            </el-form-item>
-            <el-form-item label="Enable Auth">
-              <el-switch
-                v-model="form.open_auth"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-            <el-form-item label="Ip White List">
-              <el-input
-                v-model="form.white_list"
-                type="textarea"
-                placeholder="Please input ip white list"
-                autosize=""
-              />
-            </el-form-item>
-            <el-form-item label="Ip Black List">
-              <el-input
-                v-model="form.black_list"
-                type="textarea"
-                placeholder="Please input ip black list"
-                autosize=""
-              />
-            </el-form-item>
-            <el-form-item label="Service Host Flow Limit">
-              <el-input v-model.number="form.service_host_flow_limit" />
-            </el-form-item>
-            <el-form-item label="Client Ip Flow Limit">
-              <el-input v-model.number="form.client_ip_flow_limit" />
-            </el-form-item>
-            <el-form-item label="Round Type">
-              <el-radio-group v-model="form.round_type">
-                <el-radio :label="0">random</el-radio>
-                <el-radio :label="1">round robin</el-radio>
-                <el-radio :label="2">weight round robin</el-radio>
-                <el-radio :label="3">consistent hash</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="Ip List" :required="true">
-              <el-input
-                v-model="form.ip_list"
-                type="textarea"
-                placeholder="Please input ip list"
-                autosize=""
-              />
-            </el-form-item>
-            <el-form-item label="Weight List" :required="true">
-              <el-input
-                v-model="form.weight_list"
-                type="textarea"
-                placeholder="Please input weight list"
-                autosize=""
-              />
-            </el-form-item>
-            <el-form-item label="Upstream Connect Timeout">
-              <el-input v-model.number="form.upstream_connect_timeout" />
-            </el-form-item>
-            <el-form-item label="Upstream Header Timeout">
-              <el-input v-model.number="form.upstream_header_timeout" />
-            </el-form-item>
-            <el-form-item label="Upstream Idle Timeout">
-              <el-input v-model.number="form.upstream_idle_timeout" />
-            </el-form-item>
-            <el-form-item label="Upstream Max Idle">
-              <el-input v-model.number="form.upstream_max_idle" />
-            </el-form-item>
+          <el-form ref="form" :model="form">
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="服务简要信息/Service Info" name="1">
+                <el-form-item label="Service Name" :required="true" label-width="200px">
+                  <el-input v-model="form.service_name" :disabled="isEdit" placeholder="Please input service name" />
+                </el-form-item>
+                <el-form-item label="Service Desc" label-width="200px">
+                  <el-input v-model="form.service_desc" placeholder="Please input service description" />
+                </el-form-item>
+              </el-collapse-item>
 
-            <el-form-item>
+              <el-collapse-item title="协议接入配置/Protocol Rule" name="2">
+                <el-form-item label="Rule" :required="true" label-width="200px">
+                  <el-input
+                    v-model="form.rule"
+                    placeholder="Please input rule"
+                    class="input-with-select"
+                    :disabled="isEdit"
+                  >
+                    <el-select
+                      slot="prepend"
+                      v-model="form.rule_type"
+                      placeholder="Please select rule type"
+                      style="width: 100px"
+                      :disabled="isEdit"
+                    >
+                      <el-option label="Prefix" :value="0" />
+                      <el-option label="Domain" :value="1" />
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Enable Https" label-width="200px">
+                  <el-switch
+                    v-model="form.need_https"
+                    :active-value="1"
+                    :inactive-value="0"
+                  />
+                  <span style="color: #606266; font-weight: 700; margin-left: 50px">
+                    Enable WebSocket
+                  </span>
+                  <el-switch
+                    v-model="form.need_websocket"
+                    :active-value="1"
+                    :inactive-value="0"
+                  />
+                </el-form-item>
+                <el-form-item label="Url Rewrite" label-width="200px">
+                  <el-input
+                    v-model="form.url_rewrite"
+                    type="textarea"
+                    placeholder="Please input url rewrite"
+                    autosize=""
+                  />
+                </el-form-item>
+                <el-form-item label="Header Transform" label-width="200px">
+                  <el-input
+                    v-model="form.header_transform"
+                    type="textarea"
+                    placeholder="Please input header transform"
+                    autosize=""
+                  />
+                </el-form-item>
+                <el-form-item label="Strip Uri" label-width="200px">
+                  <!-- <span style="color: #606266; font-weight: 700; margin-left: 50px">
+                    Enable Strip Uri
+                  </span> -->
+                  <el-switch
+                    v-model="form.need_strip_uri"
+                    active-text="Yes"
+                    inactive-text="No"
+                    :active-value="1"
+                    :inactive-value="0"
+                  />
+                </el-form-item>
+              </el-collapse-item>
+
+              <el-collapse-item title="权限认证配置/Ip Auth" name="3">
+                <el-form-item label="Enable Auth" label-width="200px">
+                  <el-switch
+                    v-model="form.open_auth"
+                    :active-value="1"
+                    :inactive-value="0"
+                  />
+                </el-form-item>
+                <el-form-item label="Ip White List" label-width="200px">
+                  <el-input
+                    v-model="form.white_list"
+                    type="textarea"
+                    placeholder="Please input ip white list"
+                    autosize=""
+                  />
+                </el-form-item>
+                <el-form-item label="Ip Black List" label-width="200px">
+                  <el-input
+                    v-model="form.black_list"
+                    type="textarea"
+                    placeholder="Please input ip black list"
+                    autosize=""
+                  />
+                </el-form-item>
+              </el-collapse-item>
+
+              <el-collapse-item title="流量控制配置/Rate Limit" name="4">
+                <el-form-item label="Service Host Flow Limit" label-width="200px">
+                  <el-input v-model.number="form.service_host_flow_limit" placeholder="Please input service host flow limit" />
+                </el-form-item>
+                <el-form-item label="Service Host Flow Interval" label-width="200px">
+                  <el-input v-model.number="form.service_host_flow_interval" placeholder="Please input service host flow interval" />
+                </el-form-item>
+                <el-form-item label="Client Ip Flow Limit" label-width="200px">
+                  <el-input v-model.number="form.client_ip_flow_limit" placeholder="Please input client ip flow limit" />
+                </el-form-item>
+                <el-form-item label="Client Ip Flow Interval" label-width="200px">
+                  <el-input v-model.number="form.client_ip_flow_interval" placeholder="Please input client ip flow interval" />
+                </el-form-item>
+              </el-collapse-item>
+
+              <el-collapse-item title="负载均衡配置/Load Balance" name="5">
+                <el-form-item label="Round Type" :required="true" label-width="200px">
+                  <el-radio-group v-model="form.round_type">
+                    <el-radio :label="0">random</el-radio>
+                    <el-radio :label="1">round robin</el-radio>
+                    <el-radio :label="2">weight round robin</el-radio>
+                    <el-radio :label="3">consistent hash</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="Ip List" label-width="200px">
+                  <el-input
+                    v-model="form.ip_list"
+                    type="textarea"
+                    placeholder="Please input ip list"
+                    autosize=""
+                  />
+                </el-form-item>
+                <el-form-item label="Weight List" label-width="200px">
+                  <el-input
+                    v-model="form.weight_list"
+                    type="textarea"
+                    placeholder="Please input weight list"
+                    autosize=""
+                  />
+                </el-form-item>
+              </el-collapse-item>
+
+              <el-collapse-item title="反向代理配置/Reverse Proxy" name="6">
+                <el-form-item label="Upstream Connect Timeout" label-width="200px">
+                  <el-input v-model.number="form.upstream_connect_timeout" placeholder="Please input upstream connect timeout" />
+                </el-form-item>
+                <el-form-item label="Upstream Header Timeout" label-width="200px">
+                  <el-input v-model.number="form.upstream_header_timeout" placeholder="Please input upstream header timeout" />
+                </el-form-item>
+                <el-form-item label="Upstream Idle Timeout" label-width="200px">
+                  <el-input v-model.number="form.upstream_idle_timeout" placeholder="Please input upstream idle timeout" />
+                </el-form-item>
+                <el-form-item label="Upstream Max Idle" label-width="200px">
+                  <el-input v-model.number="form.upstream_max_idle" placeholder="Please input upstream max idle" />
+                </el-form-item>
+              </el-collapse-item>
+            </el-collapse>
+
+            <el-form-item style="margin-top: 30px;text-align:center">
               <el-button
                 type="primary"
                 :disabled="isSubmit"
@@ -170,10 +199,12 @@ export default {
       isEdit: false,
       isSubmit: false,
       isCancel: false,
+      activeNames: ['1', '2', '3', '4', '5', '6'],
       service_id: 0,
       form: {
         black_list: '',
         client_ip_flow_limit: '',
+        client_ip_flow_interval: '',
         header_transform: '',
         ip_list: '',
         need_https: 0,
@@ -185,6 +216,7 @@ export default {
         rule_type: 0,
         service_desc: '',
         service_host_flow_limit: '',
+        service_host_flow_interval: '',
         service_name: '',
         upstream_connect_timeout: '',
         upstream_header_timeout: '',
@@ -213,6 +245,8 @@ export default {
         )
         this.form.client_ip_flow_limit =
           response.data.access_control.client_ip_flow_limit
+        this.form.client_ip_flow_interval =
+          response.data.access_control.client_ip_flow_interval
         this.form.header_transform = response.data.http_rule.header_transform.replace(
           /,/g,
           '\n'
@@ -231,6 +265,8 @@ export default {
         this.form.service_desc = response.data.info.service_desc
         this.form.service_host_flow_limit =
           response.data.access_control.service_host_flow_limit
+        this.form.service_host_flow_interval =
+          response.data.access_control.service_host_flow_interval
         this.form.service_name = response.data.info.service_name
         this.form.upstream_connect_timeout =
           response.data.load_balance.upstream_connect_timeout
@@ -267,8 +303,12 @@ export default {
 
       body.service_host_flow_limit =
         body.service_host_flow_limit === '' ? 0 : body.service_host_flow_limit
+      body.service_host_flow_interval =
+        body.service_host_flow_interval === '' ? 0 : body.service_host_flow_interval
       body.client_ip_flow_limit =
         body.client_ip_flow_limit === '' ? 0 : body.client_ip_flow_limit
+      body.client_ip_flow_interval =
+        body.client_ip_flow_interval === '' ? 0 : body.client_ip_flow_interval
       body.upstream_connect_timeout =
         body.upstream_connect_timeout === ''
           ? 0
@@ -321,7 +361,8 @@ export default {
     resetFormData() {
       this.form = {
         black_list: '',
-        client_ip_flow_limit: undefined,
+        client_ip_flow_limit: '',
+        client_ip_flow_interval: '',
         header_transform: '',
         ip_list: '',
         need_https: 0,
@@ -333,6 +374,7 @@ export default {
         rule_type: 0,
         service_desc: '',
         service_host_flow_limit: '',
+        service_host_flow_interval: '',
         service_name: '',
         upstream_connect_timeout: '',
         upstream_header_timeout: '',
