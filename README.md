@@ -1,10 +1,10 @@
-# giotto-gateway
+# giotto-gateway-dashboard
 
-Dashboard for giotto-gateway.
+dashboard for giotto-gateway based on vue-element-admin framework
 
 ---
 
-## TODO
+## Todos
 
 - [ ] Log Out Bug
 - [ ] Duplicate Service Tabs

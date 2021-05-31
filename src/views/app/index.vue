@@ -58,7 +58,7 @@
           <span>{{ row.secret }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Qps Limit" min-width="50px">
+      <!-- <el-table-column label="Qps Limit" min-width="50px">
         <template slot-scope="{ row }">
           <span>{{ row.qps }}</span>
         </template>
@@ -67,22 +67,27 @@
         <template slot-scope="{ row }">
           <span>{{ row.qpd }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Real Qps" min-width="50px">
+      </el-table-column> -->
+      <el-table-column label="Qps" min-width="50px">
         <template slot-scope="{ row }">
           <span>{{ row.real_qps }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Real Qpd" min-width="50px">
+      <el-table-column label="Qpd" min-width="50px">
         <template slot-scope="{ row }">
           <span>{{ row.real_qpd }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="White Ips" min-width="100px">
+      <!-- <el-table-column label="White Ips" min-width="100px">
         <template slot-scope="{ row }">
           <span>{{ row.white_ips }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="Black Ips" min-width="100px">
+        <template slot-scope="{ row }">
+          <span>{{ row.black_ips }}</span>
+        </template>
+      </el-table-column> -->
       <el-table-column
         label="Actions"
         align="center"
